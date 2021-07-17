@@ -243,28 +243,28 @@ export function OrkutNostalgicIconSet(props) {
   return (
     <OrkutNostalgicIconSet.List>
       {[
-        { name: 'Recados', slug: 'recados', icon: 'book' },
-        { name: 'Fotos', slug: 'fotos', icon: 'camera' },
-        { name: 'Videos', slug: 'videos', icon: 'video-camera' },
-        { name: 'Fãs', slug: 'fas', icon: 'star' },
-        { name: 'Mensagens', slug: 'mensagens', icon: 'email' },
-      ].map(({ name, slug, icon }) => (
+        { name: 'Recados', slug: 'recados', icon: 'book', points: 20 },
+        { name: 'Fotos', slug: 'fotos', icon: 'camera', points: 15 },
+        { name: 'Videos', slug: 'videos', icon: 'video-camera', points: 30 },
+        { name: 'Fãs', slug: 'fas', icon: 'star',points: 150 },
+        { name: 'Mensagens', slug: 'mensagens', icon: 'email', points: 250 },
+      ].map(({ name, slug, icon, points }) => (
         <li key={`orkut__icon_set__${slug}`}>
           <span style={{ gridArea: 'title' }} className="OrkutNostalgicIconSet__title">
             {name}
           </span>
           <span className="OrkutNostalgicIconSet__number" style={{ gridArea: 'number' }}>
             <img key={`orkut__icon_set__${slug}_img`} className="OrkutNostalgicIconSet__iconSample" src={`https://alurakut.vercel.app/icons/${icon}.svg`} />
-            {props[slug] ? props[slug] : 0}
+            {props[slug] ? props[slug] : points/*Verificando se na props enviado pelo parametro temos slugs, se tivermos vamos escrever os valores enviados, senão tiver escreva os valores estaticos do objecto.*/} 
           </span>
         </li>
       ))}
       {[
-        { name: 'Confiável', slug: 'confiavel', icon: 'smile' },
-        { name: 'Legal', slug: 'legal', icon: 'cool' },
-        { name: 'Sexy', slug: 'sexy', icon: 'heart' },
-      ].map(({ name, slug, icon }) => {
-        const total = props[slug] ? props[slug] : 2;
+        { name: 'Confiável', slug: 'confiavel', icon: 'smile', points: 3 },
+        { name: 'Legal', slug: 'legal', icon: 'cool', points: 2 },
+        { name: 'Sexy', slug: 'sexy', icon: 'heart', points: 1 },
+      ].map(({ name, slug, icon, points }) => {
+        const total = props[slug] ? props[slug] : points;
         return (
           <li key={`orkut__icon_set__${slug}`}>
             <span className="OrkutNostalgicIconSet__title">
