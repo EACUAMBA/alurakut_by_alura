@@ -31,23 +31,7 @@ export default function Home() {
    * Aqui estou a dizer ao react state que ele deverá actualizar onde eu estiver usando esta variavel.
    * Isso significa que a partir de agora se esta variave for actualizada ele deverá ir onde elá esta seendo utilizada e actualizar.
    */
-  const [comunidades, setComunidades] = React.useState([{
-    id: 1,
-    title: "Viagem",
-    image: `https://picsum.photos/200?1`
-  }, {
-    id: 2,
-    title: "Odeio ir a escola",
-    image: `https://picsum.photos/200?2`
-  }, {
-    id: 3,
-    title: "Programadores amadores",
-    image: `https://picsum.photos/300?3`
-  }, {
-    id: 4,
-    title: "Barmans",
-    image: `https://picsum.photos/200?4`
-  }]);//Adicionando ao ReactState meu array, agora o recta vai actuliar os valores onde estiver sendo utilizado este array
+  const [comunidades, setComunidades] = React.useState([]);//Adicionando ao ReactState meu array, agora o recta vai actuliar os valores onde estiver sendo utilizado este array
   const gitHubUser = "eacuamba";
   const [amigosFavoritos, setAmigosFavoritos] = React.useState([{
     id: 'nimiology',
@@ -74,6 +58,69 @@ export default function Home() {
     title: 'Kakise',
     image: 'https://github.com/Kakise.png'
   }]);
+
+  //Fetch
+  const [seguidores, setSeguidores] = React.useState([{
+    id: 1,
+    title: "Viagem",
+    image: `https://picsum.photos/200?1`
+  }]);
+  React.useEffect(
+    function(){
+      fetch(`https://api.github.com/users/eacuamba/followers`)
+  .then((response)=>{
+    if(response.ok){
+    return response.json();
+    }else{
+      throw new Error(response.text);
+    }
+  })
+  .then((responseJsoned)=>{
+    setSeguidores(responseJsoned.map((seguidor)=>{
+      return ({
+        id: seguidor.id,
+        title:seguidor.login,
+        image: seguidor.avatar_url,
+
+      })
+    }));
+  })
+  .catch((error)=>{
+    console.log(`Deu ruim: ` + error);
+  });
+  fetch("https://graphql.datocms.com/", {
+    method: 'POST',
+    headers:{
+      "Authorization" : '986b30b3a57e44093e363227ed14be',
+      "Content-Type": "application/json",
+      "Accept" : "application/json"
+    },
+    body:
+       JSON.stringify({ query: `{
+        allCommunities {
+          id
+          title
+          image
+          _status
+          _firstPublishedAt
+        }
+      } `})
+    
+
+  }).then(function (response){
+    return response.json();
+  })  
+  .then(function (responseJsoned){
+    const comunidadesAntigas = responseJsoned.data.allCommunities;
+    console.log(comunidadesAntigas);
+    const comunidadesAntigas_e_MaisNovas = [...comunidades, ...comunidadesAntigas];
+    setComunidades(comunidadesAntigas);
+  })
+  
+    }, []); 
+  //Hook useEffect é uma função usada para executar acoes anter do react fazer o render e apos o react fazer o render da aplicacao no navegador.
+
+  
   /**
    * O {} é do react e é usado para escrever codigo js e css.
    * O ${} é do js e serve para chamar variaveis dentro de crases `${variavel}`.
@@ -101,16 +148,28 @@ export default function Home() {
               //console.log(dadosFormulario.get('title'));//Obtendo o titlo do formulario;
 
               const objecto = {
-                id: new Date().toISOString(),
                 title: dadosFormulario.get('title'),
                 image: dadosFormulario.get("image"),
+                userslug: "eacuamba",
                 acao: dadosFormulario.get(`acao`)
               };
-              
+
               switch (objecto.acao) {
                 case "2": {
-                  const arrayDeObjetos = [...comunidades, objecto]
-                  setComunidades(arrayDeObjetos);
+                  
+                  
+                    fetch("/api/comunidades",{
+                      method: "POST",
+                      headers:{
+                        "Content-Type" : 'application/json'
+                      },
+                      body: JSON.stringify(objecto)
+                    }).then(async (response)=>{
+                      return await response.json();
+                    }).then((response)=>{
+                      const arrayDeObjetos = [...comunidades, response.Resposta]
+                      setComunidades(arrayDeObjetos);
+                    });
                   break;
                 }
                 case "1": {
@@ -159,6 +218,7 @@ export default function Home() {
         </div>
 
         <div className="profileRelationsArea" style={{ gridArea: 'profileRelationsArea' }}>
+        <ProfileShow pessoas={seguidores} titulo={`Seguidores do GITHUB`} />
           <ProfileShow pessoas={comunidades} titulo={`Comunidades`} />
           <ProfileShow pessoas={amigosFavoritos} titulo={`Amigos`} />
         </div>
