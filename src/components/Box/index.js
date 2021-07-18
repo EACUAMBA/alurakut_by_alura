@@ -11,6 +11,15 @@ const Box = styled.div`
     color: #2E7BB4;
     text-decoration: none;
     font-weight: 800;
+    text-align: center;
+  }
+  input[type=radio]{
+    margin: 5px;
+    padding: 5px;
+    border-radius: 8px;
+  }
+  #last_radio{
+    margin-bottom: 10px;
   }
   .title {
     font-size: 32px;
@@ -35,7 +44,7 @@ const Box = styled.div`
     border-color: transparent;
     border-bottom-color: #ECF2FA;
   }
-  input {
+  input[type=text] {
     width: 100%;
     background-color: #F4F4F4;
     color: #333333;
