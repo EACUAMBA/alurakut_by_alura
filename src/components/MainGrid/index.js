@@ -5,6 +5,7 @@ import styled from "styled-components";
 /*grid-gap: Espaço entre as boxes*/
 /* 1fr - pega uma fração do espaço que existe.*/
 const MainGrid = styled.main` 
+
 width: 100%;
   grid-gap: 10px;
   margin-left: auto;

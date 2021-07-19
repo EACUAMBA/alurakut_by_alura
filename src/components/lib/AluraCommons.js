@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import NextLink from 'next/link';
+import router from 'next/router';
 
 const BASE_URL = 'http://alurakut.vercel.app/';
 const v = '1';
@@ -35,7 +36,9 @@ export function AlurakutMenu({ githubUser }) {
         </nav>
 
         <nav>
-          <a href={`/logout`}>
+          <a onClick={()=>{
+            router.push("/logout")
+          }}>
             Sair
           </a>
           <div>
@@ -54,7 +57,7 @@ export function AlurakutMenu({ githubUser }) {
 }
 AlurakutMenu.Wrapper = styled.header`
   width: 100%;
-  background-color: #308BC5;
+  background-color: #fff;
   .alurakutMenuProfileSidebar {
     background: white;
     position: fixed;
@@ -80,7 +83,7 @@ AlurakutMenu.Wrapper = styled.header`
     }
     .boxLink {
       font-size: 18px;
-      color: #2E7BB4;
+      color: black;
       -webkit-text-decoration: none;
       text-decoration: none;
       font-weight: 800;
@@ -93,7 +96,7 @@ AlurakutMenu.Wrapper = styled.header`
     }
   }
   .container {
-    background-color: #308BC5;
+    background-color: #fff;
     padding: 7px 16px;
     max-width: 1110px;
     margin: auto;
@@ -119,17 +122,18 @@ AlurakutMenu.Wrapper = styled.header`
         display: flex;
       }
       a {
-        font-size: 12px;
-        color: white;
+        font-size: 14px;
+        font-weight: 700;
+        color: #ae347f;
         padding: 10px 16px;
         position: relative;
         text-decoration: none;
         &:after {
           content: " ";
-          background-color: #5292C1;
+          background-color: #ae347f;
           display: block;
           position: absolute;
-          width: 1px;
+          width: 2px;
           height: 12px;
           margin: auto;
           left: 0;
@@ -140,7 +144,7 @@ AlurakutMenu.Wrapper = styled.header`
     }
     input {
       color: #ffffff;
-      background: #5579A1;
+      background: #ae347f;
       padding: 10px 42px;
       border: 0;
       background-image: url(${`${BASE_URL}/icons/search.svg`});
@@ -166,7 +170,7 @@ function AlurakutMenuProfileSidebar({ githubUser }) {
   return (
     <div className="alurakutMenuProfileSidebar">
       <div>
-        <img src={`https://github.com/${githubUser}.png`} style={{ borderRadius: '8px' }} />
+        <img src={`https://github.com/${githubUser}.png`} style={{ borderRadius: '10px' }} />
         <hr />
         <p>
           <a className="boxLink" href={`/user/${githubUser}`}>

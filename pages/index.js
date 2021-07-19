@@ -7,6 +7,9 @@ import { AlurakutMenu, AlurakutProfileSidebarMenuDefault, OrkutNostalgicIconSet 
 import { ProfileRelationsBoxWrapper } from '../src/components/ProfileRalations';
 import { ProfileShow } from '../src/components/ProfilesShow';
 
+import nookies from 'nookies' //Importando para o nosso aquivo js a biblioteca nookies para trabalhar com cookies
+import jwt_decode from 'jwt-decode';
+
 
 function ProfileUser(propriedades) {
   //console.log(propriedades);
@@ -26,13 +29,15 @@ function ProfileUser(propriedades) {
   );
 }
 
-export default function Home() {
+export default function Home(props) {
   /**
    * Aqui estou a dizer ao react state que ele deverá actualizar onde eu estiver usando esta variavel.
    * Isso significa que a partir de agora se esta variave for actualizada ele deverá ir onde elá esta seendo utilizada e actualizar.
    */
+  
   const [comunidades, setComunidades] = React.useState([]);//Adicionando ao ReactState meu array, agora o recta vai actuliar os valores onde estiver sendo utilizado este array
-  const gitHubUser = "eacuamba";
+  const gitHubUser = props.gitHubUser;
+  const [user, setUser] = React.useState({});
   const [amigosFavoritos, setAmigosFavoritos] = React.useState([{
     id: 'nimiology',
     title: 'nimiology',
@@ -66,8 +71,10 @@ export default function Home() {
     image: `https://picsum.photos/200?1`
   }]);
   React.useEffect(
+    
     function(){
-      fetch(`https://api.github.com/users/eacuamba/followers`)
+      fetch(`https://api.github.com/users/${gitHubUser}`).then((response)=>response.json()).then((resposta_json)=>{setUser(resposta_json)});;
+      fetch(`https://api.github.com/users/${gitHubUser}/followers`)
   .then((response)=>{
     if(response.ok){
     return response.json();
@@ -136,7 +143,7 @@ export default function Home() {
         <div className="welcomeArea" style={{ gridArea: 'welcomeArea' }}>
           <Box>
             <h1 className="title">
-              Bem vind(a|o)
+              Bem vindo(a), {user.name}
             </h1>
             <OrkutNostalgicIconSet />
           </Box>
@@ -227,4 +234,39 @@ export default function Home() {
   );
 
 
+}
+
+export async function getServerSideProps(context){
+  //console.log("context: ", context);
+  const COOKIES = nookies.get(context); //Pegando COOKIES do navegador
+  const TOKEN = COOKIES.USER_TOKEN; //Pegando o token
+  console.log(TOKEN);
+  const {isAuthenticated} = await fetch("https://alurakut.vercel.app/api/auth", {
+    //Enviando dados para o API verificar se estamos logados ou não.
+    headers:{
+      Authorization: TOKEN //Token do USUARIO, para ver se esse token é válido, se foi o meu servidos que gerou.
+    }
+  }).then((response)=>{
+    const resposta = response.json();//retornando a resposta do servidor
+    return resposta;
+  });
+console.log("Esta auttenticado? ", isAuthenticated)
+  if(!isAuthenticated){//Tratando o caso se o token for invalido
+    return {
+      redirect:{
+        destination: '/login',
+        permanent: false
+      }
+    }
+  }
+
+  const gitHubUser = jwt_decode(TOKEN);
+
+  console.log(gitHubUser.githubUser);
+
+  return{
+    props: {
+      gitHubUser: gitHubUser.githubUser
+    },
+  }
 }

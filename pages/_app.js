@@ -1,11 +1,13 @@
 import { createGlobalStyle, ThemeProvider } from 'styled-components'
 import { AlurakutStyles } from '../src/components/lib/AluraCommons' //Importando os estilos do arqiovo da alura
+import  wave  from './../src/images/wave.jpg'
 /**
  * Usamos este arquivo para para aplicar configurações padrões para todo o projecto. 
  * ex: uma cor padrão para o body.
  * uma tag para o botão
  */
 //Algumas configurações que já foram feitas para o body.
+console.log(wave.src);
 const GlobalStyle = createGlobalStyle`
 *{
   margin: 0;
@@ -15,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
 
   body {
     box-sizing: border-box;
-    background-color: #D9E6F6;
+    background: black url("${wave.src}");
     font-family: sans-serif;
   }
 
@@ -23,6 +25,7 @@ const GlobalStyle = createGlobalStyle`
     display: flex;
     min-height: 100vh;
     flex-direction: column;
+    
   }
 
   img {
